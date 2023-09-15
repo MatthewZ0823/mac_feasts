@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mac_feasts/api/eats.dart';
 import 'package:mac_feasts/api/restaurant.dart';
+import 'package:mac_feasts/components/restaurant/restaurant_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,22 +51,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-              onPressed: eats.getAllRestaurants, child: const Text('fetch')),
-          FutureBuilder<List<Restaurant>>(
-            future: futureRestaurants,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // return Text(snapshot.data!);
-                return const Text("received!");
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
+          Expanded(
+            child: FutureBuilder(
+              future: futureRestaurants,
+              builder: ((context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Something went wrong");
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  var restaurants = snapshot.data;
+                  return RestaurantList(restaurants: restaurants);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+            ),
+          )
         ],
       ),
     );
