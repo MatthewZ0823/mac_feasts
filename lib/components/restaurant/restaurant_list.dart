@@ -20,43 +20,32 @@ class RestaurantList extends StatefulWidget {
 class _RestaurantListState extends State<RestaurantList> {
   var displayedRestaurants = <Restaurant>[];
 
+  List<Restaurant> filterRestaurants(TimeFilter? filter) {
+    switch (filter) {
+      case TimeFilter.now:
+        return widget.restaurants!.where((restaurant) {
+          return restaurant.isOpen(DateTime.now());
+        }).toList();
+      case TimeFilter.anytime:
+        return widget.restaurants ?? <Restaurant>[];
+      default:
+        throw UnimplementedError(
+            'Time Filter $filter has not yet been implemented');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.restaurants == null || widget.restaurants!.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    handleTimeFilter(TimeFilter? value) {
-      switch (value) {
-        case TimeFilter.now:
-          setState(() {
-            displayedRestaurants = widget.restaurants!.where((restaurant) {
-              if (restaurant.schedule == null ||
-                  restaurant.schedule!.hours.isEmpty) return false;
-
-              var now = DateTime.now();
-              return restaurant.schedule!.hours.any((hours) {
-                return hours.start != null &&
-                    hours.end != null &&
-                    hours.start!.isBefore(now) &&
-                    hours.end!.isAfter(now);
-              });
-            }).toList();
-          });
-          break;
-        case TimeFilter.anytime:
-          setState(() {
-            displayedRestaurants = widget.restaurants ?? <Restaurant>[];
-          });
-          break;
-        default:
-      }
-    }
-
     var listTiles = [
       const SizedBox(height: 10.0),
       RestaurantFilters(
-        onTimeFilter: handleTimeFilter,
+        onTimeFilter: (filter) => setState(() {
+          displayedRestaurants = filterRestaurants(filter);
+        }),
       ),
       ...displayedRestaurants.map((restaurant) {
         return RestaurantTile(restaurant: restaurant);

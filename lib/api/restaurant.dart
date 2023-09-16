@@ -31,6 +31,18 @@ class Restaurant {
     return Restaurant(name, location, schedule);
   }
 
+  /// Checks if this restaurant is open at [time]
+  bool isOpen(DateTime time) {
+    if (schedule == null || schedule!.hours.isEmpty) return false;
+
+    return schedule!.hours.any((hours) {
+      return hours.start != null &&
+          hours.end != null &&
+          hours.start!.isBefore(time) &&
+          hours.end!.isAfter(time);
+    });
+  }
+
   @override
   String toString() {
     return "Name: $name, Location: $location";
