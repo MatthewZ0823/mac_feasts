@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mac_feasts/api/restaurant.dart';
+import 'package:mac_feasts/components/restaurant/restaurant_schedule.dart';
 
 class RestaurantTile extends StatelessWidget {
   const RestaurantTile({
@@ -47,7 +48,8 @@ class RestaurantTile extends StatelessWidget {
                   location,
                   style: locationStyle,
                 ),
-              )
+              ),
+            RestaurantSchedule(schedule: restaurant.schedule),
           ],
         ),
       ),

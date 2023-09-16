@@ -1,4 +1,6 @@
-import 'package:html/dom.dart';
+import 'package:flutter/material.dart';
+import 'package:html/dom.dart' as html;
+import 'package:mac_feasts/utils/constants.dart';
 
 class Hours {
   final DateTime? start;
@@ -6,9 +8,22 @@ class Hours {
 
   Hours(this.start, this.end);
 
+  /// Puts the start and end times into a nice format for the UI
+  String toPrettyString(BuildContext context) {
+    if (start == null || end == null) return "Closed";
+
+    var $start = start ?? DateTime.now();
+    var $end = end ?? DateTime.now();
+
+    var startTime = TimeOfDay.fromDateTime($start);
+    var endTime = TimeOfDay.fromDateTime($end);
+
+    return "${startTime.format(context)} - ${endTime.format(context)}";
+  }
+
   @override
   String toString() {
-    return "start: $start, end $end";
+    return "start: $start, end: $end";
   }
 }
 
@@ -16,9 +31,10 @@ class Schedule {
   final List<Hours> schedule;
 
   Schedule(this.schedule);
+  Schedule.empty() : schedule = [];
 
   /// Searches [div] and creates a location if found
-  factory Schedule.fromScheduleDiv(Element div) {
+  factory Schedule.fromScheduleDiv(html.Element div) {
     List<Hours> schedule = [];
 
     var tableRows = div.querySelectorAll('tr');
@@ -36,7 +52,17 @@ class Schedule {
     return Schedule(schedule);
   }
 
-  static List<Hours> _getHoursFromRow(List<Element> tableRows, int rowNum) {
+  Iterable<Hours> getOpeningHours(String dayOfWeek) {
+    return schedule.where(
+      (hours) {
+        if (hours.start == null) return false;
+        return hours.start!.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
+      },
+    );
+  }
+
+  static List<Hours> _getHoursFromRow(
+      List<html.Element> tableRows, int rowNum) {
     var tableRow = tableRows[rowNum];
     var dayEl = tableRow.querySelector('.day');
     var timeEl = tableRow.querySelector('.time');
