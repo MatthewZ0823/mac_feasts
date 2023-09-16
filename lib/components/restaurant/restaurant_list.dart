@@ -12,17 +12,17 @@ class RestaurantList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listTiles = <Widget>[];
-
-    if (restaurants != null) {
-      listTiles = [
-        const SizedBox(height: 10.0),
-        ...restaurants!.map((restaurant) {
-          return RestaurantTile(restaurant: restaurant);
-        }).toList(),
-        const SizedBox(height: 10.0),
-      ];
+    if (restaurants == null || restaurants!.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
+
+    var listTiles = [
+      const SizedBox(height: 10.0),
+      ...restaurants!.map((restaurant) {
+        return RestaurantTile(restaurant: restaurant);
+      }).toList(),
+      const SizedBox(height: 10.0),
+    ];
 
     return ListView(children: listTiles);
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mac_feasts/api/eats.dart';
-import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_list.dart';
+import 'package:mac_feasts/state/restaurant_state.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Mac Feasts - Home'),
+      home: const MyHomePage(title: 'Mac Feasts'),
     );
   }
 }
@@ -33,13 +33,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<List<Restaurant>> futureRestaurants;
-  final eats = Eats();
-
   @override
   void initState() {
     super.initState();
-    futureRestaurants = eats.getAllRestaurants();
   }
 
   @override
@@ -52,22 +48,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Expanded(
-            child: FutureBuilder(
-              future: futureRestaurants,
-              builder: ((context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text("Something went wrong");
-                } else if (snapshot.hasData && snapshot.data != null) {
-                  var restaurants = snapshot.data;
-                  return RestaurantList(restaurants: restaurants);
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
+            child: ChangeNotifierProvider(
+              create: (context) => RestaurantState(),
+              child: Consumer<RestaurantState>(
+                builder: (context, value, child) => RestaurantList(
+                  restaurants: value.restaurants,
+                ),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
