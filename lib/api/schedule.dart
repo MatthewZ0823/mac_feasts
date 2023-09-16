@@ -28,10 +28,11 @@ class Hours {
 }
 
 class Schedule {
-  final List<Hours> schedule;
+  // List of opening and closing hours for a restaurant
+  final List<Hours> hours;
 
-  Schedule(this.schedule);
-  Schedule.empty() : schedule = [];
+  Schedule(this.hours);
+  Schedule.empty() : hours = [];
 
   /// Searches [div] and creates a location if found
   factory Schedule.fromScheduleDiv(html.Element div) {
@@ -53,7 +54,7 @@ class Schedule {
   }
 
   Iterable<Hours> getOpeningHours(String dayOfWeek) {
-    return schedule.where(
+    return hours.where(
       (hours) {
         if (hours.start == null) return false;
         return hours.start!.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
@@ -119,6 +120,6 @@ class Schedule {
 
   @override
   String toString() {
-    return schedule.toString();
+    return hours.toString();
   }
 }
