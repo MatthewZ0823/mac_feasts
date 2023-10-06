@@ -1,7 +1,11 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_filters.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_tile.dart';
+import 'package:mac_feasts/utils/constants.dart';
+import 'package:mac_feasts/utils/restaurant_sorts.dart';
 
 enum TimeFilter { now, anytime }
 
@@ -11,7 +15,7 @@ class RestaurantList extends StatefulWidget {
     required this.restaurants,
   });
 
-  final List<Restaurant>? restaurants;
+  final UnmodifiableListView<Restaurant>? restaurants;
 
   @override
   State<RestaurantList> createState() => _RestaurantListState();
@@ -19,19 +23,34 @@ class RestaurantList extends StatefulWidget {
 
 class _RestaurantListState extends State<RestaurantList> {
   var displayedRestaurants = <Restaurant>[];
+  var activeTimeFilter = defaultTimeFilter;
+  var activeSort = defaultSort;
 
-  List<Restaurant> filterRestaurants(TimeFilter? filter) {
-    switch (filter) {
-      case TimeFilter.now:
-        return widget.restaurants!.where((restaurant) {
-          return restaurant.isOpen(DateTime.now());
-        }).toList();
-      case TimeFilter.anytime:
-        return widget.restaurants ?? <Restaurant>[];
-      default:
-        throw UnimplementedError(
-            'Time Filter $filter has not yet been implemented');
-    }
+  void handleTimeFilterSelected(TimeFilter? selectedFilter) {
+    setState(() {
+      activeTimeFilter = selectedFilter ?? defaultTimeFilter;
+      displayedRestaurants = sortRestaurants(
+        filterRestaurants(widget.restaurants, activeTimeFilter),
+        activeSort,
+      );
+    });
+  }
+
+  void handleSortSelected(SortBy selectedSort) {
+    setState(() {
+      activeSort = selectedSort;
+      displayedRestaurants = sortRestaurants(
+        filterRestaurants(widget.restaurants, activeTimeFilter),
+        activeSort,
+      );
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant RestaurantList oldWidget) {
+    handleTimeFilterSelected(activeTimeFilter);
+    handleSortSelected(activeSort);
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -43,9 +62,9 @@ class _RestaurantListState extends State<RestaurantList> {
     var listTiles = [
       const SizedBox(height: 10.0),
       RestaurantFilters(
-        onTimeFilter: (filter) => setState(() {
-          displayedRestaurants = filterRestaurants(filter);
-        }),
+        onTimeFilterSelected: (selectedFilter) =>
+            handleTimeFilterSelected(selectedFilter),
+        onSortSelected: (sortType) => handleSortSelected(sortType),
       ),
       ...displayedRestaurants.map((restaurant) {
         return RestaurantTile(restaurant: restaurant);
