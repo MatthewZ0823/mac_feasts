@@ -68,7 +68,7 @@ class _RestaurantListState extends State<RestaurantList> {
       ),
       ...displayedRestaurants.map((restaurant) {
         return RestaurantTile(restaurant: restaurant);
-      }).toList(),
+      }),
       const SizedBox(height: 10.0),
     ];
 

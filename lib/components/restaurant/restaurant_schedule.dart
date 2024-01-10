@@ -15,13 +15,14 @@ class RestaurantSchedule extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    if (schedule == null) {
+    // Make schedule a local varaible to promote it later
+    var $schedule = schedule;
+
+    if ($schedule == null) {
       return const SizedBox(
         height: 2.0,
       );
     }
-
-    var $schedule = schedule ?? Schedule.empty();
 
     Map<String, String> scheduleMap = pairWeekdayWithHours($schedule, context);
 
