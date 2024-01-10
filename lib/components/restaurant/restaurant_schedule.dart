@@ -74,7 +74,7 @@ class RestaurantSchedule extends StatelessWidget {
       return $schedule
           .getOpeningHours(weekday)
           .map((hours) => hours.toPrettyString(context))
-          .join("\n");
+          .join('\n');
     });
     Map<String, String> scheduleMap = Map.fromIterables(days, openingTimes);
     return scheduleMap;
