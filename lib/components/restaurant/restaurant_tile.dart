@@ -21,7 +21,7 @@ class RestaurantTile extends StatelessWidget {
       fontStyle: FontStyle.italic,
     );
 
-    String location = restaurant.location ?? '';
+    String location = restaurant.location;
 
     return Padding(
       padding: const EdgeInsets.all(10),

@@ -36,11 +36,8 @@ List<Restaurant> sortRestaurants(
 List<Restaurant> _locationSort(List<Restaurant> restaurants) {
   var alphabeticalSort = restaurants.toList()
     ..sort((a, b) {
-      if (a.location == null) return 1;
-      if (b.location == null) return 1;
-
-      var locationA = a.location ?? '';
-      var locationB = b.location ?? '';
+      var locationA = a.location;
+      var locationB = b.location;
 
       if (locationA.compareTo(locationB) == 0) {
         return a.name.compareTo(b.name);
@@ -57,7 +54,7 @@ List<Restaurant> _locationSort(List<Restaurant> restaurants) {
   return alphabeticalSort;
 }
 
+// TODO: off campus pretty useless
 bool _isOffCampus(Restaurant restaurant) {
-  if (restaurant.location == null) return false;
-  return restaurant.location!.toLowerCase().trim() == 'off campus';
+  return restaurant.location.toLowerCase().trim() == 'off campus';
 }
