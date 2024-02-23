@@ -46,8 +46,8 @@ void updateSchedules(DateTime date, List<Restaurant> restaurants) async {
       var oldRestaurant = restaurants
           .firstWhere((element) => element.name == newRestaurant.name);
 
-      oldRestaurant.schedule?.openingTimes
-          .addAll(newRestaurant.schedule?.openingTimes ?? []);
+      oldRestaurant.schedule.openingTimes
+          .addAll(newRestaurant.schedule.openingTimes);
     } on StateError {
       // Old restaurant not found
       continue;

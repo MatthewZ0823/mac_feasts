@@ -15,8 +15,7 @@ class Schedule {
   Iterable<OpeningTime> getOpeningHours(String dayOfWeek) {
     return openingTimes.where(
       (hours) {
-        if (hours.start == null) return false;
-        return hours.start!.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
+        return hours.start.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
       },
     );
   }
@@ -25,8 +24,7 @@ class Schedule {
   Iterable<OpeningTime> getOpeningHoursFromDate(DateTime date) {
     return openingTimes.where(
       (hours) {
-        if (hours.start == null) return false;
-        return hours.start!.isSameDate(date);
+        return hours.start.isSameDate(date);
       },
     );
   }
