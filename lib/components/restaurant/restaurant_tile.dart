@@ -80,7 +80,9 @@ class RestaurantTile extends StatelessWidget {
                 ),
               ],
             ),
-            RestaurantSchedule(schedule: restaurant.schedule),
+            RestaurantSchedule(
+              schedule: restaurant.scheduleFromWeek(weekStart),
+            ),
           ],
         ),
       ),

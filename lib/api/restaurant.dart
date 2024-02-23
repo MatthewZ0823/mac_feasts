@@ -19,12 +19,21 @@ class Restaurant {
 
   Schedule scheduleFromWeek(DateTime week) {
     var weekStart = getWeekStart(week);
+    var weekEnd = weekStart.add(const Duration(days: 7));
 
-    return Schedule(schedule.openingTimes.where((openingTime) {
-      int differenceInDays = openingTime.start.difference(weekStart).inDays;
+    // Accounting for daylight savings
+    if (weekEnd.hour == 23) {
+      weekEnd = weekEnd.add(const Duration(hours: 1));
+    } else if (weekEnd.hour == 1) {
+      weekEnd = weekEnd.add(const Duration(hours: -1));
+    }
 
-      return differenceInDays < 7;
-    }).toList());
+    var filteredOpeningTimes = schedule.openingTimes.where((openingTime) {
+      return openingTime.end.isBefore(weekEnd) &&
+          openingTime.start.isAfterOrEqual(weekStart);
+    }).toList();
+
+    return Schedule(filteredOpeningTimes);
   }
 
   @override
