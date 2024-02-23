@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mac_feasts/api/eats.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_list.dart';
 import 'package:mac_feasts/state/restaurant_state.dart';
 import 'package:provider/provider.dart';

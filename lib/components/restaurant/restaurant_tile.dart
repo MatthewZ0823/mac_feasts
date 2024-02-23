@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_schedule.dart';
 
@@ -6,9 +7,17 @@ class RestaurantTile extends StatelessWidget {
   const RestaurantTile({
     super.key,
     required this.restaurant,
+    required this.weekStart,
+    required this.handlePrevWeek,
+    required this.handleNextWeek,
   });
 
   final Restaurant restaurant;
+  final void Function() handlePrevWeek;
+  final void Function() handleNextWeek;
+  final DateTime weekStart;
+
+  static final DateFormat _dateFormatter = DateFormat('EEEE MMM dd');
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +31,10 @@ class RestaurantTile extends StatelessWidget {
     );
 
     String location = restaurant.location;
+
+    String weekStartStr = _dateFormatter.format(weekStart);
+    String weekEndStr =
+        _dateFormatter.format(weekStart.add(const Duration(days: 6)));
 
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -49,6 +62,24 @@ class RestaurantTile extends StatelessWidget {
                   style: locationStyle,
                 ),
               ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: handlePrevWeek,
+                  icon: const Icon(Icons.arrow_left),
+                ),
+                Expanded(
+                  child: Text(
+                    '$weekStartStr - $weekEndStr',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                IconButton(
+                  onPressed: handleNextWeek,
+                  icon: const Icon(Icons.arrow_right),
+                ),
+              ],
+            ),
             RestaurantSchedule(schedule: restaurant.schedule),
           ],
         ),

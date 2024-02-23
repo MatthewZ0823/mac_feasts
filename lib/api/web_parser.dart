@@ -41,7 +41,7 @@ DateTime _parseTime(String s, int daysFromToday) {
   return midnightToday.add(timeToAdd);
 }
 
-/// Returns a Schedule object with the opening times contained in [row]
+/// Parses a Schedule object from [row]
 ///
 /// [row] should be an HTML tr element, with >1 td child tags
 /// The 0th td should contain the name of the Restaurant
@@ -78,7 +78,7 @@ Schedule _scheduleFromTableRow(html.Element row) {
   return Schedule(times);
 }
 
-/// Returns a [Restaurant] object, using on the contents of [row]
+/// Parses a [Restaurant] object from [row]
 ///
 /// [row] should be an HTML tr element, with >1 td child tags
 /// The 0th td should contain the name of the Restaurant

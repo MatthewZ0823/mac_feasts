@@ -1,5 +1,6 @@
 import 'package:mac_feasts/api/opening_time.dart';
 import 'package:mac_feasts/utils/constants.dart';
+import 'package:mac_feasts/utils/dates.dart';
 
 class Schedule {
   // List of opening and closing hours for a restaurant
@@ -16,6 +17,16 @@ class Schedule {
       (hours) {
         if (hours.start == null) return false;
         return hours.start!.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
+      },
+    );
+  }
+
+  /// Gets the opening hours on day [date]
+  Iterable<OpeningTime> getOpeningHoursFromDate(DateTime date) {
+    return openingTimes.where(
+      (hours) {
+        if (hours.start == null) return false;
+        return hours.start!.isSameDate(date);
       },
     );
   }

@@ -1,12 +1,11 @@
-import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as html_parser;
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-// import 'dart:developer' as developer;
-
 import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/api/web_parser.dart';
 
-Future<String> fetchCalendar(DateTime date) async {
+/// Makes a GET request to maceats and returns the body of the html
+Future<String> _fetchCalendarString(DateTime date) async {
   var formattedDate = DateFormat('yyyy-MM-dd').format(date);
   var response = await http.get(Uri.https('hospitality-mcmaster.libcal.com',
       '/widget/hours/grid', {'date': formattedDate}));
@@ -18,9 +17,10 @@ Future<String> fetchCalendar(DateTime date) async {
   }
 }
 
+/// Get a list of all restaurants from maceats
 Future<List<Restaurant>> getAllRestaurants() async {
   var restaurants = <Restaurant>[];
-  var input = await fetchCalendar(DateTime.now());
+  var input = await _fetchCalendarString(DateTime.now());
   var document = html_parser.parse(input);
 
   var rows = document.querySelectorAll('tr.s-lc-whw-loc');
@@ -30,4 +30,27 @@ Future<List<Restaurant>> getAllRestaurants() async {
   }
 
   return restaurants;
+}
+
+/// Update [restaurants] schedules with the opening times for the week of [date]
+void updateSchedules(DateTime date, List<Restaurant> restaurants) async {
+  var input = await _fetchCalendarString(date);
+  var document = html_parser.parse(input);
+
+  var rows = document.querySelectorAll('tr.s-lc-whw-loc');
+
+  for (final row in rows) {
+    var newRestaurant = restaurantFromTableRow(row);
+
+    try {
+      var oldRestaurant = restaurants
+          .firstWhere((element) => element.name == newRestaurant.name);
+
+      oldRestaurant.schedule?.openingTimes
+          .addAll(newRestaurant.schedule?.openingTimes ?? []);
+    } on StateError {
+      // Old restaurant not found
+      continue;
+    }
+  }
 }

@@ -1,10 +1,12 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:mac_feasts/api/eats.dart';
 import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_filters.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_tile.dart';
 import 'package:mac_feasts/utils/constants.dart';
+import 'package:mac_feasts/utils/dates.dart';
 import 'package:mac_feasts/utils/restaurant_sorts.dart';
 
 enum TimeFilter { now, anytime }
@@ -25,6 +27,9 @@ class _RestaurantListState extends State<RestaurantList> {
   var displayedRestaurants = <Restaurant>[];
   var activeTimeFilter = defaultTimeFilter;
   var activeSort = defaultSort;
+
+  // Week starts on a Monday
+  DateTime weekStart = getWeekStart(DateTime.now());
 
   void handleTimeFilterSelected(TimeFilter? selectedFilter) {
     setState(() {
@@ -53,6 +58,13 @@ class _RestaurantListState extends State<RestaurantList> {
     super.didUpdateWidget(oldWidget);
   }
 
+  /// Change [weekStart] by [numWeeks]
+  void changeWeekStart(int numWeeks) {
+    setState(() {
+      weekStart = weekStart.add(Duration(days: 7 * numWeeks));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.restaurants == null || widget.restaurants!.isEmpty) {
@@ -60,6 +72,15 @@ class _RestaurantListState extends State<RestaurantList> {
     }
 
     var listTiles = [
+      TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        ),
+        onPressed: () => updateSchedules(
+            DateTime.now().add(const Duration(days: 7)),
+            widget.restaurants!.toList()),
+        child: const Text('TextButton'),
+      ),
       const SizedBox(height: 10.0),
       RestaurantFilters(
         onTimeFilterSelected: (selectedFilter) =>
@@ -67,7 +88,16 @@ class _RestaurantListState extends State<RestaurantList> {
         onSortSelected: (sortType) => handleSortSelected(sortType),
       ),
       ...displayedRestaurants.map((restaurant) {
-        return RestaurantTile(restaurant: restaurant);
+        return RestaurantTile(
+          restaurant: restaurant,
+          weekStart: weekStart,
+          handlePrevWeek: () {
+            changeWeekStart(-1);
+          },
+          handleNextWeek: () {
+            changeWeekStart(1);
+          },
+        );
       }),
       const SizedBox(height: 10.0),
     ];

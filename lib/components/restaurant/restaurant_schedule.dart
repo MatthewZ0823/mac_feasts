@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mac_feasts/api/schedule.dart';
 import 'package:mac_feasts/utils/constants.dart';
-import 'package:mac_feasts/utils/utils.dart';
 
 class RestaurantSchedule extends StatelessWidget {
   const RestaurantSchedule({
@@ -51,15 +50,20 @@ class RestaurantSchedule extends StatelessWidget {
             color: theme.primaryColorLight,
             border: Border.all(width: 1),
           ),
-          child: Table(
-            border: TableBorder.symmetric(
-              inside: BorderSide(width: 1, color: theme.colorScheme.outline),
-            ),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(100),
-              1: FlexColumnWidth(),
-            },
-            children: tableChildren,
+          child: Column(
+            children: [
+              Table(
+                border: TableBorder.symmetric(
+                  inside:
+                      BorderSide(width: 1, color: theme.colorScheme.outline),
+                ),
+                columnWidths: const <int, TableColumnWidth>{
+                  0: FixedColumnWidth(100),
+                  1: FlexColumnWidth(),
+                },
+                children: tableChildren,
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 5.0),
@@ -70,14 +74,22 @@ class RestaurantSchedule extends StatelessWidget {
   /// Pairs each schedule list entry with its corresponding weekday
   Map<String, String> pairWeekdayWithHours(
       Schedule $schedule, BuildContext context) {
-    var days = rotate(daysOfWeek, DateTime.now().weekday - 1);
-    var openingTimes = days.map((weekday) {
+    var openingTimes = daysOfWeek.map((weekday) {
       return $schedule
           .getOpeningHours(weekday)
           .map((hours) => hours.toPrettyString(context))
           .join('\n');
     });
-    Map<String, String> scheduleMap = Map.fromIterables(days, openingTimes);
+    Map<String, String> scheduleMap =
+        Map.fromIterables(daysOfWeek, openingTimes);
     return scheduleMap;
   }
+
+  // /// Pairs each schedule list entry with its corresponding weekday
+  // Map<String, String> pairWeekdayWithHours(
+  //     Schedule $schedule, BuildContext context) {
+  //   for (int i = 0; i < 7; i++) {
+  //     var date =
+  //   }
+  // }
 }
