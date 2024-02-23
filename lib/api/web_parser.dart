@@ -64,7 +64,7 @@ Schedule _scheduleFromTableRow(html.Element row) {
     timeStrings.removeWhere((element) => element.isEmpty);
 
     times += timeStrings.map((timeStr) {
-      var daysFromToday = DateTime.now().weekday - i;
+      var daysFromToday = i - DateTime.now().weekday;
       var [openingTime, closingTime] = timeStr
           .split('–')
           .map((str) => str.trim())
