@@ -1,6 +1,5 @@
 import 'package:mac_feasts/api/opening_time.dart';
 import 'package:mac_feasts/utils/constants.dart';
-import 'package:mac_feasts/utils/dates.dart';
 
 class Schedule {
   // List of opening and closing hours for a restaurant

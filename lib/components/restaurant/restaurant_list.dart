@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:mac_feasts/api/eats.dart';
 import 'package:mac_feasts/api/restaurant.dart';
@@ -37,26 +35,14 @@ class _RestaurantListState extends State<RestaurantList> {
   DateTime weekStart = getWeekStart(DateTime.now());
 
   void handleTimeFilterSelected(TimeFilter? selectedFilter) async {
-    // var $restaurants = await restaurants;
-    //
     setState(() {
       activeTimeFilter = selectedFilter ?? defaultTimeFilter;
-      // displayedRestaurants = sortRestaurants(
-      //   filterRestaurants($restaurants, activeTimeFilter),
-      //   activeSort,
-      // );
     });
   }
 
   void handleSortSelected(SortBy selectedSort) async {
-    // var $restaurants = await restaurants;
-    //
     setState(() {
       activeSort = selectedSort;
-      // displayedRestaurants = sortRestaurants(
-      //   filterRestaurants($restaurants, activeTimeFilter),
-      //   activeSort,
-      // );
     });
   }
 
@@ -124,11 +110,6 @@ class _RestaurantListState extends State<RestaurantList> {
             return SizedBox(
               height: 30,
               child: Center(
-                // child: SizedBox(
-                //   height: 30,
-                //   width: 30,
-                //   child: Icon(Icons.error),
-                // ),
                 child: RichText(
                   text: const TextSpan(
                     style: TextStyle(color: Colors.black),
