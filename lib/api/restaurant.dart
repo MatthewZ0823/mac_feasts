@@ -33,7 +33,11 @@ class Restaurant {
           openingTime.start.isAfterOrEqual(weekStart);
     }).toList();
 
-    return Schedule(filteredOpeningTimes);
+    return Schedule(filteredOpeningTimes, schedule.scrapedWeeks);
+  }
+
+  bool isScrapedWeek(DateTime weekStart) {
+    return schedule.scrapedWeeks.contains(weekStart);
   }
 
   @override

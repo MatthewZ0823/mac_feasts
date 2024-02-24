@@ -62,6 +62,12 @@ class _RestaurantListState extends State<RestaurantList> {
   void changeWeekStart(int numWeeks) {
     setState(() {
       weekStart = weekStart.add(Duration(days: 7 * numWeeks));
+
+      if (widget.restaurants == null) return;
+
+      // if (widget.restaurants!
+      //     .any((restaurant) => !restaurant.isScrapedWeek(weekStart))) {
+      // }
     });
   }
 
@@ -72,15 +78,6 @@ class _RestaurantListState extends State<RestaurantList> {
     }
 
     var listTiles = [
-      TextButton(
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-        ),
-        onPressed: () => updateSchedules(
-            DateTime.now().add(const Duration(days: 7)),
-            widget.restaurants!.toList()),
-        child: const Text('TextButton'),
-      ),
       const SizedBox(height: 10.0),
       RestaurantFilters(
         onTimeFilterSelected: (selectedFilter) =>

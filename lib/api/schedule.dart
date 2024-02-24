@@ -6,8 +6,15 @@ class Schedule {
   // List of opening and closing hours for a restaurant
   final List<OpeningTime> openingTimes;
 
-  Schedule(this.openingTimes);
-  Schedule.empty() : openingTimes = [];
+  /// List of weeks that have been scraped from the web
+  ///
+  /// The DateTime represents the start of the week (Monday)
+  final List<DateTime> scrapedWeeks;
+
+  Schedule(this.openingTimes, this.scrapedWeeks);
+  Schedule.empty()
+      : openingTimes = [],
+        scrapedWeeks = [];
 
   /// Gets the opening hours on day [dayOfWeek]
   ///
@@ -16,15 +23,6 @@ class Schedule {
     return openingTimes.where(
       (hours) {
         return hours.start.weekday == daysOfWeek.indexOf(dayOfWeek) + 1;
-      },
-    );
-  }
-
-  /// Gets the opening hours on day [date]
-  Iterable<OpeningTime> getOpeningHoursFromDate(DateTime date) {
-    return openingTimes.where(
-      (hours) {
-        return hours.start.isSameDate(date);
       },
     );
   }

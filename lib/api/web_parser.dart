@@ -12,10 +12,10 @@ class ParseException implements Exception {
   String toString() => 'ParseException: $message';
 }
 
-/// Returns a DateTime at time [s], [daysFromToday] from today.
+/// Returns a DateTime at time [s], on [date].
 ///
 /// Where [s] is a string formatted like 1:32am
-DateTime _parseTime(String s, int daysFromToday) {
+DateTime _parseTime(String s, DateTime date) {
   var am = s.substring(s.length - 2) == 'am';
   var time = s.substring(0, s.length - 2);
   var [hour, minute] = [0, 0];
@@ -26,9 +26,8 @@ DateTime _parseTime(String s, int daysFromToday) {
     hour = int.parse(time);
   }
 
-  var now = DateTime.now().toLocal();
-  var midnightToday = DateTime(now.year, now.month, now.day);
-  var timeToAdd = Duration(days: daysFromToday, minutes: minute);
+  var midnightDate = DateTime(date.year, date.month, date.day);
+  var timeToAdd = Duration(minutes: minute);
 
   if (am && hour == 12) {
     timeToAdd += Duration(hours: hour - 12);
@@ -38,17 +37,17 @@ DateTime _parseTime(String s, int daysFromToday) {
     timeToAdd += Duration(hours: hour);
   }
 
-  return midnightToday.add(timeToAdd);
+  return midnightDate.add(timeToAdd);
 }
 
-/// Parses a Schedule object from [row]
+/// Parses a Schedule object from [row] at time [weekStart]
 ///
 /// [row] should be an HTML tr element, with >1 td child tags
 /// The 0th td should contain the name of the Restaurant
 /// And the following td elements should contain the opening times
 /// of the restaurant at the different days of the week
 /// The 1st td should correspond to Monday, 2nd Tuesday, etc.
-Schedule _scheduleFromTableRow(html.Element row) {
+Schedule _scheduleFromTableRow(html.Element row, DateTime weekStart) {
   var tableEls = row.querySelectorAll('td');
 
   var times = <OpeningTime>[];
@@ -64,21 +63,20 @@ Schedule _scheduleFromTableRow(html.Element row) {
     timeStrings.removeWhere((element) => element.isEmpty);
 
     times += timeStrings.map((timeStr) {
-      var daysFromToday = i - DateTime.now().weekday;
       var [openingTime, closingTime] = timeStr
           .split('–')
           .map((str) => str.trim())
-          .map((str) => _parseTime(str, daysFromToday))
+          .map((str) => _parseTime(str, weekStart.add(Duration(days: (i - 1)))))
           .toList();
 
       return OpeningTime(openingTime, closingTime);
     }).toList();
   }
 
-  return Schedule(times);
+  return Schedule(times, [weekStart]);
 }
 
-/// Parses a [Restaurant] object from [row]
+/// Parses a [Restaurant] object from [row]. At week [weekStart]
 ///
 /// [row] should be an HTML tr element, with >1 td child tags
 /// The 0th td should contain the name of the Restaurant
@@ -87,7 +85,7 @@ Schedule _scheduleFromTableRow(html.Element row) {
 /// The 1st td should correspond to Monday, 2nd Tuesday, etc.
 ///
 /// Throws a [ParseException] if [row] could not be parsed
-Restaurant restaurantFromTableRow(html.Element row) {
+Restaurant restaurantFromTableRow(html.Element row, DateTime weekStart) {
   String name, location;
 
   var firstDataCell = row.querySelector('td');
@@ -116,7 +114,7 @@ Restaurant restaurantFromTableRow(html.Element row) {
     location = location.substring(0, location.length - 1);
   }
 
-  var schedule = _scheduleFromTableRow(row);
+  var schedule = _scheduleFromTableRow(row, weekStart);
 
   return Restaurant(name, location, schedule);
 }
