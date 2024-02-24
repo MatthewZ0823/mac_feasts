@@ -84,12 +84,4 @@ class RestaurantSchedule extends StatelessWidget {
         Map.fromIterables(daysOfWeek, openingTimes);
     return scheduleMap;
   }
-
-  // /// Pairs each schedule list entry with its corresponding weekday
-  // Map<String, String> pairWeekdayWithHours(
-  //     Schedule $schedule, BuildContext context) {
-  //   for (int i = 0; i < 7; i++) {
-  //     var date =
-  //   }
-  // }
 }

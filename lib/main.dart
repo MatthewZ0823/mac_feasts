@@ -46,17 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
+      body: const Column(
         children: [
           Expanded(
-            child: ChangeNotifierProvider(
-              create: (context) => RestaurantState(),
-              child: Consumer<RestaurantState>(
-                builder: (context, value, child) => RestaurantList(
-                  restaurants: value.restaurants,
-                ),
-              ),
-            ),
+            child: RestaurantList(),
           ),
         ],
       ),
