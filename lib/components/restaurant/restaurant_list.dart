@@ -6,6 +6,7 @@ import 'package:mac_feasts/components/restaurant/restaurant_tile.dart';
 import 'package:mac_feasts/utils/constants.dart';
 import 'package:mac_feasts/utils/dates.dart';
 import 'package:mac_feasts/utils/restaurant_sorts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum TimeFilter { now, anytime, favorited }
 
@@ -21,10 +22,29 @@ class RestaurantList extends StatefulWidget {
 class _RestaurantListState extends State<RestaurantList> {
   late Future<List<Restaurant>> restaurants;
 
+  Future<List<Restaurant>> initRestaurants() async {
+    // Start all the async calls
+    var prefsFuture = SharedPreferences.getInstance();
+    var restaurantsFuture = getAllRestaurants(DateTime.now());
+
+    // Wait for them to finish
+    var prefs = await prefsFuture;
+    var restaurants = await restaurantsFuture;
+
+    var favorited = prefs.getStringList(favoritesKeys);
+
+    if (favorited == null) return restaurants;
+    for (final restaurant in restaurants) {
+      restaurant.favorited = favorited.contains(restaurant.name);
+    }
+
+    return restaurants;
+  }
+
   @override
   void initState() {
     super.initState();
-    restaurants = getAllRestaurants(DateTime.now());
+    restaurants = initRestaurants();
   }
 
   var activeTimeFilter = defaultTimeFilter;
@@ -45,10 +65,19 @@ class _RestaurantListState extends State<RestaurantList> {
     });
   }
 
-  void handleFavorite(Restaurant restaurant) {
+  void handleFavorite(Restaurant restaurant) async {
     setState(() {
       restaurant.toggleFavorite();
     });
+
+    // Write the favorites to disk
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+        favoritesKeys,
+        (await restaurants)
+            .where((restaurant) => restaurant.favorited)
+            .map((restaurant) => restaurant.name)
+            .toList());
   }
 
   List<Restaurant> getDisplayedRestaurants(List<Restaurant> restaurants) {

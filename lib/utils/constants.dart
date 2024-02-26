@@ -13,3 +13,5 @@ const daysOfWeek = [
 
 const defaultTimeFilter = TimeFilter.now;
 const defaultSort = SortBy.nameAZ;
+
+const favoritesKeys = 'favorites';
