@@ -50,9 +50,19 @@ class RestaurantTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              restaurant.name,
-              style: titleStyle,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    restaurant.name,
+                    style: titleStyle,
+                  ),
+                ),
+                FavoriteButton(
+                  favorited: false,
+                  onPressed: () => {},
+                ),
+              ],
             ),
             if (location != '')
               Padding(
@@ -87,6 +97,26 @@ class RestaurantTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
+    super.key,
+    required this.favorited,
+    required this.onPressed,
+  });
+
+  final bool favorited;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: favorited ? const Icon(Icons.star) : const Icon(Icons.star_border),
+      onPressed: onPressed,
+      color: favorited ? Colors.amber : Theme.of(context).iconTheme.color,
     );
   }
 }
