@@ -82,6 +82,7 @@ class RestaurantTile extends StatelessWidget {
             ),
             RestaurantSchedule(
               schedule: restaurant.scheduleFromWeek(weekStart),
+              loaded: restaurant.isScrapedWeek(weekStart),
             ),
           ],
         ),

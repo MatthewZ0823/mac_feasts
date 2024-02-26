@@ -6,9 +6,11 @@ class RestaurantSchedule extends StatelessWidget {
   const RestaurantSchedule({
     super.key,
     required this.schedule,
+    required this.loaded,
   });
 
   final Schedule? schedule;
+  final bool loaded;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,16 @@ class RestaurantSchedule extends StatelessWidget {
 
     var tableChildren = <TableRow>[];
     scheduleMap.forEach((day, openingTime) {
+      String openingStatus;
+
+      if (!loaded) {
+        openingStatus = 'Loading...';
+      } else if (openingTime == '') {
+        openingStatus = 'Closed';
+      } else {
+        openingStatus = openingTime;
+      }
+
       tableChildren.add(TableRow(
         children: [
           Padding(
@@ -35,7 +47,7 @@ class RestaurantSchedule extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-            child: Text(openingTime == '' ? 'Closed' : openingTime),
+            child: Text(openingStatus),
           ),
         ],
       ));
