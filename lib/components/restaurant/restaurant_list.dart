@@ -7,7 +7,7 @@ import 'package:mac_feasts/utils/constants.dart';
 import 'package:mac_feasts/utils/dates.dart';
 import 'package:mac_feasts/utils/restaurant_sorts.dart';
 
-enum TimeFilter { now, anytime }
+enum TimeFilter { now, anytime, favorited }
 
 class RestaurantList extends StatefulWidget {
   const RestaurantList({
@@ -27,7 +27,6 @@ class _RestaurantListState extends State<RestaurantList> {
     restaurants = getAllRestaurants(DateTime.now());
   }
 
-  // var displayedRestaurants = <Restaurant>[];
   var activeTimeFilter = defaultTimeFilter;
   var activeSort = defaultSort;
 

@@ -13,6 +13,8 @@ List<Restaurant> filterRestaurants(
       }).toList();
     case TimeFilter.anytime:
       return restaurants;
+    case TimeFilter.favorited:
+      return restaurants.where((restaurant) => restaurant.favorited).toList();
     default:
       throw UnimplementedError(
           'Time Filter $filter has not yet been implemented');
