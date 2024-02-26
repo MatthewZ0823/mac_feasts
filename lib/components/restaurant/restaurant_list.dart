@@ -46,17 +46,16 @@ class _RestaurantListState extends State<RestaurantList> {
     });
   }
 
+  void handleFavorite(Restaurant restaurant) {
+    setState(() {
+      restaurant.toggleFavorite();
+    });
+  }
+
   List<Restaurant> getDisplayedRestaurants(List<Restaurant> restaurants) {
     var sorted = sortRestaurants(restaurants, activeSort);
     return filterRestaurants(sorted, activeTimeFilter);
   }
-
-  // @override
-  // void didUpdateWidget(covariant RestaurantList oldWidget) {
-  //   handleTimeFilterSelected(activeTimeFilter);
-  //   handleSortSelected(activeSort);
-  //   super.didUpdateWidget(oldWidget);
-  // }
 
   /// Change [weekStart] by [numWeeks]
   void changeWeekStart(int numWeeks) async {
@@ -102,6 +101,7 @@ class _RestaurantListState extends State<RestaurantList> {
                     handleNextWeek: () {
                       changeWeekStart(1);
                     },
+                    handleFavorite: () => handleFavorite(restaurant),
                   );
                 }),
               ],

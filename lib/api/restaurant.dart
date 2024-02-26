@@ -5,8 +5,9 @@ class Restaurant {
   final String name;
   final String location;
   final Schedule schedule;
+  bool favorited;
 
-  Restaurant(this.name, this.location, this.schedule);
+  Restaurant(this.name, this.location, this.schedule, {this.favorited = false});
 
   /// Checks if this restaurant is open at [time]
   bool isOpen(DateTime time) {
@@ -38,6 +39,10 @@ class Restaurant {
 
   bool isScrapedWeek(DateTime weekStart) {
     return schedule.scrapedWeeks.contains(weekStart);
+  }
+
+  void toggleFavorite() {
+    favorited = !favorited;
   }
 
   @override

@@ -10,12 +10,14 @@ class RestaurantTile extends StatelessWidget {
     required this.weekStart,
     required this.handlePrevWeek,
     required this.handleNextWeek,
+    required this.handleFavorite,
   });
 
   final Restaurant restaurant;
+  final DateTime weekStart;
   final void Function() handlePrevWeek;
   final void Function() handleNextWeek;
-  final DateTime weekStart;
+  final void Function() handleFavorite;
 
   static final DateFormat _dateFormatter = DateFormat('EEEE MMM dd');
 
@@ -59,8 +61,8 @@ class RestaurantTile extends StatelessWidget {
                   ),
                 ),
                 FavoriteButton(
-                  favorited: false,
-                  onPressed: () => {},
+                  favorited: restaurant.favorited,
+                  onPressed: handleFavorite,
                 ),
               ],
             ),
