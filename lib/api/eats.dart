@@ -51,6 +51,11 @@ Future<List<Restaurant>> updateRestaurantSchedules(
 
     var newSchedule = Schedule(newScheduleOpeningTimes, newScrapedWeeks);
 
-    return Restaurant(restaurant.name, restaurant.location, newSchedule);
+    return Restaurant(
+      restaurant.name,
+      restaurant.location,
+      newSchedule,
+      favorited: restaurant.favorited,
+    );
   }).toList();
 }

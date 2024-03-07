@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mac_feasts/api/restaurant.dart';
 import 'package:mac_feasts/components/restaurant/restaurant_schedule.dart';
+import 'package:mac_feasts/utils/dates.dart';
 
 class RestaurantTile extends StatelessWidget {
   const RestaurantTile({
@@ -94,6 +95,7 @@ class RestaurantTile extends StatelessWidget {
             ),
             RestaurantSchedule(
               schedule: restaurant.scheduleFromWeek(weekStart),
+              isCurrentWeek: getWeekStart(DateTime.now()) == weekStart,
               loaded: restaurant.isScrapedWeek(weekStart),
             ),
           ],

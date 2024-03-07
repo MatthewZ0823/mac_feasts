@@ -7,10 +7,12 @@ class RestaurantSchedule extends StatelessWidget {
     super.key,
     required this.schedule,
     required this.loaded,
+    required this.isCurrentWeek,
   });
 
   final Schedule? schedule;
   final bool loaded;
+  final bool isCurrentWeek;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,10 @@ class RestaurantSchedule extends StatelessWidget {
     Map<String, String> scheduleMap = pairWeekdayWithHours($schedule, context);
 
     var tableChildren = <TableRow>[];
-    scheduleMap.forEach((day, openingTime) {
+    scheduleMap.forEach((weekday, openingTime) {
       String openingStatus;
+      bool shouldBold =
+          isCurrentWeek && daysOfWeek[DateTime.now().weekday - 1] == weekday;
 
       if (!loaded) {
         openingStatus = 'Loading...';
@@ -43,11 +47,21 @@ class RestaurantSchedule extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-            child: Text(day),
+            child: Text(
+              weekday,
+              style: TextStyle(
+                fontWeight: shouldBold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-            child: Text(openingStatus),
+            child: Text(
+              openingStatus,
+              style: TextStyle(
+                fontWeight: shouldBold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ),
         ],
       ));
