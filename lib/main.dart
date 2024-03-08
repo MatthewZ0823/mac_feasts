@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mac_feasts/components/restaurant/restaurant_list.dart';
+import 'package:mac_feasts/components/restaurant/restaurant_tab.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,33 +34,6 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class RestaurantsTab extends StatefulWidget {
-  const RestaurantsTab({super.key});
-
-  @override
-  State<RestaurantsTab> createState() => _RestaurantsTabState();
-}
-
-class _RestaurantsTabState extends State<RestaurantsTab> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: RestaurantList(),
-          ),
-        ],
       ),
     );
   }
