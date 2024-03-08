@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: const Text('Mac Feasts'),
             bottom: const TabBar(tabs: [
-              Tab(icon: Icon(Icons.restaurant)),
-              Tab(icon: Icon(Icons.directions_transit)),
+              Tab(text: 'Restaurants'),
+              Tab(text: 'Nutrition'),
             ]),
           ),
           body: const TabBarView(
