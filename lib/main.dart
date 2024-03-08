@@ -16,21 +16,37 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Mac Feasts'),
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Mac Feasts'),
+            bottom: const TabBar(tabs: [
+              Tab(icon: Icon(Icons.restaurant)),
+              Tab(icon: Icon(Icons.directions_transit)),
+            ]),
+          ),
+          body: const TabBarView(
+            children: [
+              RestaurantsTab(),
+              Icon(Icons.directions_transit),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class RestaurantsTab extends StatefulWidget {
+  const RestaurantsTab({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<RestaurantsTab> createState() => _RestaurantsTabState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _RestaurantsTabState extends State<RestaurantsTab> {
   @override
   void initState() {
     super.initState();
@@ -38,12 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Column(
+    return const Scaffold(
+      body: Column(
         children: [
           Expanded(
             child: RestaurantList(),
