@@ -24,10 +24,6 @@ class RestaurantFilters extends StatelessWidget {
             dropdownMenuEntries: const [
               DropdownMenuEntry(value: TimeFilter.now, label: 'Now'),
               DropdownMenuEntry(value: TimeFilter.anytime, label: 'Anytime'),
-              DropdownMenuEntry(
-                value: TimeFilter.favorited,
-                label: 'Favorited',
-              ),
             ],
             initialSelection: defaultTimeFilter,
             leadingIcon: const Icon(Icons.calendar_month),

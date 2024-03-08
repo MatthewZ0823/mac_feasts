@@ -8,7 +8,7 @@ import 'package:mac_feasts/utils/dates.dart';
 import 'package:mac_feasts/utils/restaurant_sorts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum TimeFilter { now, anytime, favorited }
+enum TimeFilter { now, anytime }
 
 class RestaurantList extends StatefulWidget {
   const RestaurantList({
@@ -56,6 +56,11 @@ class _RestaurantListState extends State<RestaurantList> {
   void handleTimeFilterSelected(TimeFilter? selectedFilter) async {
     setState(() {
       activeTimeFilter = selectedFilter ?? defaultTimeFilter;
+
+      // Set the week to the current week if the time filter is set to now
+      if (activeTimeFilter == TimeFilter.now) {
+        weekStart = getWeekStart(DateTime.now());
+      }
     });
   }
 
